@@ -4,7 +4,18 @@ class ClassState extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            error: false
+            error: false,
+            loading: false
+        }
+    }
+
+    componentDidUpdate() {
+        if (this.state.loading) {
+            setTimeout(() =>{
+                console.log("haciendo")
+                this.setState({loading: false})
+                console.log("terminando")
+            }, 3000)
         }
     }
     render() {
@@ -17,10 +28,13 @@ class ClassState extends React.Component {
                 {this.state.error && (
                     <p>Error: Wrong security code</p>
                 )}
+                {this.state.loading && (
+                    <p>Loading...</p>
+                )}
                 <input placeholder="Security code" />
                 <button
                     onClick={() => 
-                        this.setState(prevState=> ({error: !prevState.error}))
+                        this.setState({loading: true})
                     }
                 >
                     Check
