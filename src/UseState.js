@@ -1,19 +1,21 @@
 import React from 'react';
 
+const SECURITY_CODE = '123';
+
 function UseState({ name }) {
+    const [value, setValue] = React.useState('');
     const [error, setError] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
 
     React.useEffect(()=>{
-        console.log("Empezando efecto")
         if (loading) {
             setTimeout(() =>{
-                console.log("haciendo")
+                if (value !== SECURITY_CODE) {
+                    setError(true)
+                }
                 setLoading(false)
-                console.log("terminando")
-            }, 3000)
+            }, 1000)
         }
-        console.log("Terminando ef")
     }, [loading]);
 
     return (
@@ -28,9 +30,20 @@ function UseState({ name }) {
             {loading && (
                 <p>Loading...</p>
             )}
-            <input placeholder="Security code" />
+            <input
+                placeholder="Security code"
+                value={value}
+                onChange={(event)=> {
+                    setValue(event.target.value);
+                }}
+                />
             <button
-                onClick={() => setLoading(true)}
+                onClick={
+                    () => {
+                        setLoading(true);
+                        setError(false);
+                    }
+                }
             >
                 Check
             </button>

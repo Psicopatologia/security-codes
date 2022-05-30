@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import { UseState } from './UseState.js';
 import { ClassState } from './ClassState.js';
 
