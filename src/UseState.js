@@ -3,46 +3,51 @@ import React from 'react';
 const SECURITY_CODE = '123';
 
 function UseState({ name }) {
-    const [value, setValue] = React.useState('');
-    const [error, setError] = React.useState(false);
-    const [loading, setLoading] = React.useState(false);
+    const [state, setState] = React.useState({
+        value: '',
+        error: false,
+        loading: false,
+    });
+    console.log(state)
 
-    React.useEffect(()=>{
-        if (loading) {
-            setTimeout(() =>{
-                if (value !== SECURITY_CODE) {
-                    setError(true)
+    React.useEffect(() => {
+        if (state.loading) {
+            setTimeout(() => {
+                if (state.value !== SECURITY_CODE) {
+                    console.log("hola")
+                    setState({...state, error: true, loading: false })
+                    console.log(state)
+                } else {
+                    setState({...state, loading: false })
                 }
-                setLoading(false)
             }, 1000)
         }
-    }, [loading]);
+    }, [state.loading]);
 
     return (
         <div>
             <h2>Delete {name}</h2>
             <p>
-                Write your security code  
+                Write your security code
             </p>
-            {error && (
+            {state.error && (
                 <p>Error: Wrong security code</p>
             )}
-            {loading && (
+            {state.loading && (
                 <p>Loading...</p>
             )}
             <input
                 placeholder="Security code"
-                value={value}
-                onChange={(event)=> {
-                    setValue(event.target.value);
+                value={state.value}
+                onChange={(event) => {
+                    setState({...state,
+                        value: event.target.value
+                    });
                 }}
-                />
+            />
             <button
                 onClick={
-                    () => {
-                        setLoading(true);
-                        setError(false);
-                    }
+                    () => setState({...state, loading: true, error: false })
                 }
             >
                 Check
