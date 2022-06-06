@@ -7,53 +7,89 @@ function UseState({ name }) {
         value: '',
         error: false,
         loading: false,
+        delete: false,
+        confirmed: false,
     });
-    console.log(state)
 
     React.useEffect(() => {
         if (state.loading) {
-            setTimeout(() => {
-                if (state.value !== SECURITY_CODE) {
-                    console.log("hola")
-                    setState({...state, error: true, loading: false })
-                    console.log(state)
-                } else {
-                    setState({...state, loading: false })
-                }
-            }, 1000)
+            if (state.value !== SECURITY_CODE) {
+                setState({
+                    ...state,
+                    error: true,
+                    loading: false
+                })
+            } else {
+                setState({
+                    ...state,
+                    loading: false,
+                    confirmed: true
+                })
+            }
         }
     }, [state.loading]);
 
-    return (
-        <div>
-            <h2>Delete {name}</h2>
-            <p>
-                Write your security code
-            </p>
-            {state.error && (
-                <p>Error: Wrong security code</p>
-            )}
-            {state.loading && (
-                <p>Loading...</p>
-            )}
-            <input
-                placeholder="Security code"
-                value={state.value}
-                onChange={(event) => {
-                    setState({...state,
-                        value: event.target.value
-                    });
-                }}
-            />
-            <button
-                onClick={
-                    () => setState({...state, loading: true, error: false })
-                }
-            >
-                Check
-            </button>
-        </div>
-    )
+    if (!state.delete && !state.confirmed) {
+        return (
+            <div>
+                <h2>Delete {name}</h2>
+                <p>
+                    Write your security code
+                </p>
+                {state.error && (
+                    <p>Error: Wrong security code</p>
+                )}
+                {state.loading && (
+                    <p>Loading...</p>
+                )}
+                <input
+                    placeholder="Security code"
+                    value={state.value}
+                    onChange={(event) => {
+                        setState({
+                            ...state,
+                            value: event.target.value
+                        });
+                    }}
+                />
+                <button
+                    onClick={
+                        () => setState({ ...state, loading: true, error: false })
+                    }
+                >
+                    Check
+                </button>
+            </div>
+        )
+    } else if (state.confirmed && !state.delete) {
+        return (
+            <React.Fragment>
+                <h1>Delete useState</h1>
+                <p>Are you sure?</p>
+                <button
+                    onClick={() => setState({ ...state, delete: true, value: '' })}
+                >
+                    Delete
+                </button>
+                <button
+                    onClick={() => setState({ ...state, confirmed: false, value: '' })}
+                >
+                    Cancel
+                </button>
+            </React.Fragment>
+        )
+    } else {
+        return (
+            <React.Fragment>
+                <p>Successfully deleted</p>
+                <button
+                    onClick={() => setState({ ...state, delete: false, confirmed: false })}
+                >
+                    Go back
+                </button>
+            </React.Fragment>
+        )
+    }
 }
 
 export { UseState };
